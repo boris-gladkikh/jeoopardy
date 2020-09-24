@@ -101,6 +101,11 @@ header {
     margin: auto;
 }
 
+.loader {
+    width: 100px;
+    margin-top: 200px;
+}
+
 
 /* some colors you may find useful:
   #115ff4 -- background-color

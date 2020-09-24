@@ -1,6 +1,6 @@
 const BASE_URL = "http://jservice.io/api";
 
-// categories is the main data structure for the app; it looks like this:
+// categories:
 
 //  [
 //    { title: "Math",
@@ -28,21 +28,19 @@ let categories = [];
  * Returns array of category ids
  */
 
-
-
 // * get category Ids - wrote a random number generator. since I need 6 categories, the function fills array with 6 
 // * unique category id's within the range of id's in the api (which i find to be around 18000, currently)
 // * so rather than doing a 'random' request, it gets category values locally.
 
 function getCategoryIds() {
-  let arrayOfCategoryIds = [];
-  for (let i = 0; i < 6; i++) {
-    let randomNumberGen = Math.floor(Math.random() * 10000);
-    if (!(arrayOfCategoryIds.includes(randomNumberGen)) && randomNumberGen < 18000) {
-      arrayOfCategoryIds.push(randomNumberGen);
+    let arrayOfCategoryIds = [];
+    for (let i = 0; i < 6; i++) {
+        let randomNumberGen = Math.floor(Math.random() * 10000);
+        if (!(arrayOfCategoryIds.includes(randomNumberGen)) && randomNumberGen < 18000) {
+            arrayOfCategoryIds.push(randomNumberGen);
+        }
     }
-  }
-  return arrayOfCategoryIds;
+    return arrayOfCategoryIds;
 
 }
 
@@ -62,36 +60,36 @@ function getCategoryIds() {
 // requests category by ID, creates new object with proper title/clues format.
 
 async function getCategory(catId) {
-  let categoryObject = {};
-  let responseCategory = await axios.get(`${BASE_URL}/category?id=${catId}`);
-  categoryObject.title = responseCategory.data.title;
-  let cluesResponseArray = responseCategory.data.clues;
-  let properlyFormattedCluesArray = populateCategoryCluesArray(cluesResponseArray);
-  categoryObject.clues = properlyFormattedCluesArray;
-  return categoryObject;
+    let categoryObject = {};
+    let responseCategory = await axios.get(`${BASE_URL}/category?id=${catId}`);
+    categoryObject.title = responseCategory.data.title;
+    let cluesResponseArray = responseCategory.data.clues;
+    let properlyFormattedCluesArray = populateCategoryCluesArray(cluesResponseArray);
+    categoryObject.clues = properlyFormattedCluesArray;
+    return categoryObject;
 
 }
 
 // helper function to format clues reponse into proper format (question, answer, showing)
 
 function populateCategoryCluesArray(arrayOfObjects) {
-  let arrayOfCluesInProperFormat = [];
-  for (let i = 0; i < arrayOfObjects.length; i++) {
-    let currentClueObj = {};
-    currentClueObj.question = arrayOfObjects[i].question;
-    currentClueObj.answer = arrayOfObjects[i].answer;
-    currentClueObj.showing = null;
-    arrayOfCluesInProperFormat.push(currentClueObj);
+    let arrayOfCluesInProperFormat = [];
+    for (let i = 0; i < arrayOfObjects.length; i++) {
+        let currentClueObj = {};
+        currentClueObj.question = arrayOfObjects[i].question;
+        currentClueObj.answer = arrayOfObjects[i].answer;
+        currentClueObj.showing = null;
+        arrayOfCluesInProperFormat.push(currentClueObj);
 
-  }
-  return arrayOfCluesInProperFormat;
+    }
+    return arrayOfCluesInProperFormat;
 };
 
 
 
 //===================================================================================
 
-//UI implementation section!
+//UI section
 
 const $gameBoard = $(".game-board");
 const $startGameButton = $(".new-game-button");
@@ -111,65 +109,63 @@ const $loadScreen = $(".load-screen");
  */
 
 async function fillTable() {
-  let categoryIdArray = getCategoryIds();
-  let categoriesArray = []
-  for (let i = 0; i < categoryIdArray.length; i++) {
-    let categoryObject = getCategory(categoryIdArray[i]);
-    categoriesArray.push(await categoryObject);
-    categories.push(await categoryObject);
-  }
-  // console.log("this is the categoriesArray", categoriesArray)
-  populateHeadersInGameTable(categoriesArray);
-  populateQuestionsInGameTable(categoriesArray);
-  attachDataToCells(categoriesArray);
+    let categoryIdArray = getCategoryIds();
+    let categoriesArray = []
+    for (let i = 0; i < categoryIdArray.length; i++) {
+        let categoryObject = getCategory(categoryIdArray[i]);
+        categoriesArray.push(await categoryObject);
+        categories.push(await categoryObject);
+    }
+    populateHeadersInGameTable(categoriesArray);
+    populateQuestionsInGameTable(categoriesArray);
+    attachDataToCells(categoriesArray);
 }
 
 //helper function to create and populate header row in table with categories
 
 function populateHeadersInGameTable(array) {
-  for (let i = 0; i < array.length; i++) {
-    let $generatedGameTableCategoriesHTML =
-      $(`<td class=" category-card category ${i}">${String(array[i].title)}</td>`)
-    $gameCategoryRow.append($generatedGameTableCategoriesHTML);
-  }
+    for (let i = 0; i < array.length; i++) {
+        let $generatedGameTableCategoriesHTML =
+            $(`<td class=" category-card category ${i}">${String(array[i].title)}</td>`)
+        $gameCategoryRow.append($generatedGameTableCategoriesHTML);
+    }
 };
 
 //helper function to populate table body with question data cells that have a unique id from 0 to 29
 
 function populateQuestionsInGameTable(array) {
-  let idCounter = 0
-  for (let i = 0; i < array.length - 1; i++) {
-    let generatedGameTableQuestionsHTML =
-      $(`<tr class=" question ${i}">
+    let idCounter = 0
+    for (let i = 0; i < array.length - 1; i++) {
+        let generatedGameTableQuestionsHTML =
+            $(`<tr class=" question ${i}">
     <td class="game-card" id="${idCounter}">?</td>
     <td class="game-card" id="${idCounter + 1}">?</td>
     <td class="game-card" id="${idCounter + 2}">?</td>
     <td class="game-card" id="${idCounter + 3}">?</td>
     <td class="game-card" id="${idCounter + 4}">?</td>
     <td class="game-card" id="${idCounter + 5}">?</td>
-    </tr>`
-      );
-    $gameQuestionsBody.append(generatedGameTableQuestionsHTML);
-    idCounter += 6;
-  }
+    </tr>`);
+        $gameQuestionsBody.append(generatedGameTableQuestionsHTML);
+        idCounter += 6;
+    }
 };
 
 //function uses unique id's to attach the question and category data to each cell!
 
 function attachDataToCells(array) {
-  let categoryIndex = 0;
-  let clueIndex = 0;
-  for (let i = 0; i <= 29; i++) {
-    $(`#${i}`).data(array[categoryIndex].clues[clueIndex]);
-    categoryIndex++;
-    if (categoryIndex >= 6) {
-      categoryIndex = 0;
-      clueIndex++;
+    let categoryIndex = 0;
+    let clueIndex = 0;
+    for (let i = 0; i <= 29; i++) {
+        $(`#${i}`).data(array[categoryIndex].clues[clueIndex]);
+        categoryIndex++;
+        if (categoryIndex >= 6) {
+            categoryIndex = 0;
+            clueIndex++;
+        }
+        // if (clueIndex >= 10) {
+        //   clueIndex = 9;
+        // }
     }
-    // if (clueIndex >= 10) {
-    //   clueIndex = 9;
-    // }
-  }
 }
 
 
@@ -184,21 +180,20 @@ function attachDataToCells(array) {
 
 
 function handleClick(evt) {
-  let $currentEventData = $(evt.target).data()
-  if ($currentEventData.showing === null) {
-    $(evt.target).text($currentEventData.question);
-    $currentEventData.showing = "question";
-  }
-  else if ($currentEventData.showing === "question") {
-    $(evt.target).text(String($currentEventData.answer));
-    $currentEventData.showing = "answer";
-    $(evt.target).removeClass("game-card");
-    $(evt.target).addClass("game-card-solved");
+    let $currentEventData = $(evt.target).data()
+    if ($currentEventData.showing === null) {
+        $(evt.target).text($currentEventData.question);
+        $currentEventData.showing = "question";
+    } else if ($currentEventData.showing === "question") {
+        $(evt.target).text(String($currentEventData.answer));
+        $currentEventData.showing = "answer";
+        $(evt.target).removeClass("game-card");
+        $(evt.target).addClass("game-card-solved");
 
 
-    // console.log($(evt.target).data());
+        // console.log($(evt.target).data());
 
-  }
+    }
 }
 
 
@@ -207,14 +202,11 @@ function handleClick(evt) {
  */
 
 function showLoadingView() {
-  $gameCategoryRow.empty();
-  $gameQuestionsBody.empty();
-  $gameBoard.hide();
-  $loadScreen.show();
-  $startGameButton.text("Loading...");
-
-
-
+    $loadScreen.show();
+    $startGameButton.text("Loading...");
+    $gameCategoryRow.empty();
+    $gameQuestionsBody.empty();
+    $gameBoard.hide();
 
 
 }
@@ -222,8 +214,8 @@ function showLoadingView() {
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
-  $loadScreen.hide()
-  $gameBoard.show();
+    $loadScreen.hide()
+    $gameBoard.show();
 
 }
 
@@ -239,14 +231,14 @@ function hideLoadingView() {
 //* means i need an await in there to execute the rest. I just couldn't figure it out debugging.
 
 async function setupAndStart() {
-  showLoadingView();
+    showLoadingView();
 
-  $(document).ready(function () {
-    setTimeout(hideLoadingView(), 10000);
-    fillTable();
-    $startGameButton.text("Restart");
+    $(document).ready(async function() {
+        await fillTable();
+        $startGameButton.text("Restart");
+        hideLoadingView();
 
-  });
+    });
 
 
 }
@@ -255,7 +247,6 @@ async function setupAndStart() {
 
 /** On click of start / restart button, set up game. */
 
-// TODO
 
 // Clicking the start game button launches the set up and start function
 
