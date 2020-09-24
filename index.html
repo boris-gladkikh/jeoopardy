@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jeopardy!</title>
+    <link href="https://fonts.googleapis.com/css?family=Copse&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="jeopardy.css">
+</head>
+
+<body>
+    <section class="container">
+        <div class="header-title">
+            <h1>Jeopardy!</h1>
+            <button class="new-game-button new-game" type="button">
+        <h5>New Game</h5>
+      </button>
+        </div>
+        <div class="load-screen">
+            <h1>Now Loading...</h1>
+            <img src="https://media1.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" alt="" class="source">
+        </div>
+
+        <div class="game-board">
+            <table class="jeopardy-table">
+                <thead>
+                    <tr class="category-row">
+                    </tr>
+                </thead>
+                <tbody class="game-table-body">
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <script src="https://unpkg.com/jquery"></script>
+        <script src="https://unpkg.com/axios/dist/axios.js"></script>
+        <script src="https://unpkg.com/lodash"></script>
+        <script src="jeopardy.js"></script>
+
+</body>
+
+</html>
