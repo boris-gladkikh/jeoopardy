@@ -1,4 +1,4 @@
-const BASE_URL = "http://jservice.io/api";
+const BASE_URL = "https://jservice.io/api";
 
 // categories:
 
