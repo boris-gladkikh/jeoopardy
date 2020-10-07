@@ -226,9 +226,6 @@ function hideLoadingView() {
  * - create HTML table
  * */
 
-//* async function works, but for some reason the loading screen disappears almost immediately. 
-//* i assume it has to do with the document onload im using, and the async next to the function
-//* means i need an await in there to execute the rest. I just couldn't figure it out debugging.
 
 async function setupAndStart() {
     showLoadingView();
@@ -256,19 +253,3 @@ $startGameButton.on("click", setupAndStart);
 
 $gameBoard.on("click", ".game-card", handleClick);
 
-//* left this code commented out because handleClick function didn't work for a while
-
-/** On page load, add event handler for clicking clues */
-// $gameBoard.on("click", ".game-card", function (evt) {
-//   let $currentEventData = $(evt.target).data()
-//   if ($currentEventData.showing === null) {
-//     $(evt.target).text($currentEventData.question);
-//     $currentEventData.showing = "question";
-//   }
-//   else if ($currentEventData.showing === "question") {
-//     $(evt.target).text(String($currentEventData.answer));
-//     $currentEventData.showing = "answer";
-//     $(evt.target).removeClass("game-card");
-//     $(evt.target).addClass("game-card-solved");
-//   }
-// });
